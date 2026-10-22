@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#172554">
+  <title>Sumatif Planner | ZIESORRA</title>
+  <link rel="stylesheet" href="./src/app.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside id="sidebar" class="sidebar">
+      <a class="brand" href="#dashboard" aria-label="Sumatif Planner home"><span class="brand-mark">Z</span><span><strong>ZIESORRA</strong><small>Sumatif Planner</small></span></a>
+      <nav class="nav-list" aria-label="Navigasi utama">
+        <button data-route="dashboard" class="nav-item"><span>▦</span>Dashboard</button>
+        <button data-route="calendar" class="nav-item"><span>▣</span>Kalender Sumatif</button>
+        <button data-route="form" class="nav-item"><span>＋</span>Form & Validasi</button>
+        <button data-route="reports" class="nav-item"><span>▤</span>Laporan & Tabel</button>
+      </nav>
+      <div class="sidebar-note"><strong>Mode pengembangan</strong><p>Data demo disimpan sementara selama sesi aktif.</p></div>
+    </aside>
+    <div id="mobileScrim" class="mobile-scrim"></div>
+    <main class="main-area">
+      <header class="topbar">
+        <button id="menuToggle" class="menu-toggle" aria-label="Buka menu">☰</button>
+        <div><div class="eyebrow">ZIESORRA · POWERED BY ZIESORRA</div><h1 id="pageTitle">Dashboard</h1></div>
+        <div class="topbar-meta"><span class="status-dot"></span><span>TA 2026/2027 · Semester Ganjil</span></div>
+      </header>
+      <section class="page-heading"><div><h2 id="screenTitle">Dashboard</h2><p id="screenDescription">Ringkasan perencana asesmen sekolah dasar.</p></div><span class="demo-badge">DEMO · NON-PERSISTEN</span></section>
+      <iframe id="screenFrame" title="Konten Sumatif Planner" src="./pages/dashboard.html"></iframe>
+    </main>
+  </div>
+  <script type="module" src="./src/app.js"></script>
+</body>
+</html>
