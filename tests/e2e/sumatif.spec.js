@@ -48,3 +48,33 @@ test("form limits subjects and teachers to active class assignments",async({page
  await expect(frame.locator("#subject-select option")).toHaveCount(3);
  await expect(frame.locator("#teacher-select")).toHaveValue("teacher-ahmad");
 });
+
+test("calendar, dashboard and report stay consistent after cancellation",async({page})=>{
+ await page.goto("/");
+ await page.getByRole("button",{name:/Form & Validasi/}).click();
+ let frame=page.frameLocator("#screenFrame");
+ await frame.locator("#input-assessment-date").fill("2026-10-20");
+ await frame.locator("#topic-input").fill("Audit konsistensi lintas layar");
+ await frame.getByRole("button",{name:/Validasi & simpan/}).click();
+ await expect(frame.locator("#result")).toContainText("Jadwal tersimpan");
+ await page.getByRole("button",{name:/Kalender Sumatif/}).click();
+ frame=page.frameLocator("#screenFrame");
+ await expect(frame.locator("#list")).toContainText("Audit konsistensi lintas layar");
+ await expect(frame.locator("#calendar")).toContainText("Bahasa Indonesia");
+ await page.getByRole("button",{name:/Laporan & Tabel/}).click();
+ frame=page.frameLocator("#screenFrame");
+ const row=frame.locator("#rows tr").filter({hasText:"Audit konsistensi lintas layar"});
+ await expect(row).toBeVisible();
+ const id=await row.getAttribute("data-schedule-id");
+ page.once("dialog",dialog=>dialog.accept());
+ await row.getByRole("button",{name:"Batalkan"}).click();
+ await expect(frame.locator(`#rows tr[data-schedule-id="${id}"] span.status`)).toHaveText("cancelled");
+ await page.getByRole("button",{name:/Dashboard/}).click();
+ frame=page.frameLocator("#screenFrame");
+ await expect(frame.locator("#rows")).not.toContainText("Audit konsistensi lintas layar");
+ await expect(frame.locator("#cancelled")).toHaveText("2");
+ await page.getByRole("button",{name:/Kalender Sumatif/}).click();
+ frame=page.frameLocator("#screenFrame");
+ await expect(frame.locator("#list")).toContainText("cancelled");
+ await expect(frame.locator("#list")).toContainText("Audit konsistensi lintas layar");
+});
