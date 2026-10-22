@@ -1,8 +1,8 @@
 # Sumatif Planner — Kontrak Data v1 (Draft)
 
-Status: DRAFT v1.2 — semua keputusan kontrak awal telah diisi berdasarkan persetujuan pemilik proyek; menunggu persetujuan final eksplisit sebelum migrasi database.
+Status: DRAFT v1.3 — pembaruan mengikuti ketentuan Sumatif Planner yang sudah ada; tidak dimaksudkan untuk mengubah aturan bisnis. Menunggu persetujuan final sebelum migrasi database.
 Tujuan: menyepakati entitas, relasi, batasan bisnis, dan akses sebelum integrasi database.
-Sumber kebenaran: kebutuhan dan aturan yang sudah diimplementasikan pada prototipe. Detail yang belum diputuskan ditandai OPEN QUESTION.
+Sumber kebenaran: ketentuan dan perilaku Sumatif Planner yang sudah ada. Perubahan ini berfokus pada pembaruan struktur dan kesiapan integrasi; jangan menambahkan atau mengubah aturan bisnis tanpa instruksi eksplisit pemilik proyek.
 
 ## 1. Prinsip
 
@@ -34,10 +34,10 @@ Aturan:
 - is_active: boolean
 - created_at, updated_at: timestamptz
 
-Keputusan kontrak:
-- ID rombel bersifat tetap dan digunakan lintas tahun ajaran.
-- Tahun ajaran ditempelkan pada `teacher_assignments` dan `assessment_schedules`, bukan sebagai identitas kelas.
-- Nama kelas dapat dipakai ulang atau berubah tanpa mengubah `classes.id`; perubahan nama/tingkat perlu dikelola hati-hati agar riwayat lama tetap terbaca. Perlu keputusan operasional tentang apakah tingkat kelas pada record historis disimpan sebagai snapshot.
+Keputusan yang dikonfirmasi:
+- ID rombel tetap digunakan lintas tahun ajaran.
+- Tahun ajaran tetap menjadi konteks pada penugasan guru dan jadwal asesmen.
+- Pembaruan tidak boleh mengubah perilaku jadwal atau riwayat yang sudah ada.
 
 ### subjects
 - id: UUID, primary key
@@ -65,7 +65,7 @@ Keputusan kontrak:
 
 Aturan:
 - Jadwal hanya valid jika terdapat penugasan aktif yang cocok dengan tahun ajaran + semester + kelas + mata pelajaran + guru.
-- OPEN QUESTION: apakah kombinasi kelas + mata pelajaran + semester boleh memiliki lebih dari satu guru aktif. Sampai diputuskan, skema tidak boleh mengasumsikan satu guru saja tanpa validasi.
+- Validasi penugasan harus mempertahankan ketentuan yang sudah berjalan. Jangan memperkenalkan pembatasan baru jumlah guru per kombinasi kelas/mapel/semester tanpa acuan dari aturan lama.
 
 ### school_calendar_events
 - id: UUID, primary key
@@ -139,21 +139,21 @@ Aturan:
 - Jika memakai Supabase, aktifkan RLS dan uji kebijakan per tabel; jangan pernah mengekspos service-role key ke browser.
 - Simpan rahasia hanya pada environment backend; jangan commit URL database berisi password atau token.
 
-## 6. OPEN QUESTIONS — belum diputuskan
+## 6. Prinsip pembaruan (tanpa perubahan aturan bisnis)
 
-Keputusan yang sudah ditetapkan oleh pemilik proyek:
+Ketentuan yang sudah dikonfirmasi untuk pembaruan ini:
 - ID rombel tetap lintas tahun ajaran.
-- Guru hanya melihat jadwal kelas/mapel yang ditugaskan.
+- Guru hanya dapat melihat jadwal kelas/mapel sesuai penugasan aktif.
 - Hanya admin yang boleh mengedit dan membatalkan jadwal.
-- Benturan waktu guru/kelas menjadi peringatan, bukan pemblokir simpan.
+- Benturan waktu menjadi peringatan dan tidak memblokir penyimpanan.
 - Autentikasi menggunakan Supabase Auth.
+- Batas kuota, nomor sumatif, kalender sekolah, status jadwal, dan validasi lain tetap mengikuti aturan yang sudah ada pada Sumatif Planner.
 
-Hal yang masih perlu ditentukan sebelum kontrak final:
-1. Penugasan aktif untuk kombinasi kelas + mata pelajaran + semester dibatasi satu guru utama. Jika sekolah membutuhkan beberapa guru, perubahan kontrak harus disetujui sebelum implementasi.
-2. Nomor sumatif boleh digunakan kembali setelah jadwal sebelumnya berstatus cancelled. Record lama tetap disimpan untuk riwayat.
-3. Kuota berlaku per kelas per tanggal: maksimal 2 asesmen tertulis; jika ada asesmen praktik, maksimal 3 asesmen aktif total.
-4. Riwayat kelas dijaga dengan menyimpan snapshot nama/label kelas pada jadwal atau mekanisme riwayat yang setara, agar laporan tahun sebelumnya tidak berubah ketika nama/tingkat rombel diperbarui.
-5. Jadwal berstatus scheduled yang disimpan admin langsung dapat dilihat oleh guru yang ditugaskan; tidak diperlukan langkah publikasi terpisah.
+Ketentuan implementasi:
+- Jangan menambah aturan bisnis baru atau mengubah perilaku lama hanya berdasarkan asumsi desain database.
+- Jika ditemukan perbedaan antara dokumen ini dan perilaku aplikasi yang sudah ada, catat perbedaannya untuk ditinjau; jangan diam-diam mengganti aturan.
+- Pertahankan riwayat jadwal yang sudah dibatalkan.
+- Migrasi nanti harus disiapkan untuk pembaruan/penyimpanan data yang sudah ada, bukan memulai ulang aturan dari nol.
 
 ## 7. Status implementasi
 
