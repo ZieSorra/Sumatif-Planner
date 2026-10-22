@@ -35,4 +35,4 @@ Untuk membuka UI, sajikan direktori ini lewat server HTTP lokal. Jangan membuka 
 
 ## Database planning
 
-Draft data contract (not yet applied to any database): [docs/DATA_CONTRACT_V1.md](docs/DATA_CONTRACT_V1.md). Review the open questions before preparing migrations.
+Draft data contract (not yet applied to any database): [docs/DATA_CONTRACT_V1.md](docs/DATA_CONTRACT_V1.md). Compatibility audit for preserving existing rules: [docs/COMPATIBILITY_AUDIT.md](docs/COMPATIBILITY_AUDIT.md). No database migration or production write is authorized yet.
