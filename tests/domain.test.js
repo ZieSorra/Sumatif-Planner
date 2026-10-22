@@ -7,4 +7,4 @@ test("school event date rejected",()=>assert.ok(validateSchedule({...base,date:"
 test("teacher assignment must match class and subject",()=>assert.ok(validateSchedule({...base,teacherId:"teacher-nurjanah"},DEMO_SCHEDULES).errors.some(e=>e.key==="teacher-assignment")));
 test("end time must follow start time",()=>assert.ok(validateSchedule({...base,startTime:"10:00",endTime:"09:00"},DEMO_SCHEDULES).errors.some(e=>e.key==="time-order")));
 test("sumatif sequence uniqueness enforced",()=>assert.ok(validateSchedule({...base,sumatifNumber:1},DEMO_SCHEDULES).errors.some(e=>e.key==="sequence-unique")));
-test("editing record excludes itself",()=>assert.equal(validateSchedule({...DEMO_SCHEDULES[0],material:"Perubahan"},DEMO_SCHEDULES,{excludeId:DEMO_SCHEDULES[0].id}).valid,true));
+test("editing record excludes itself from the uniqueness and quota set",()=>{const target={...DEMO_SCHEDULES[0],date:"2026-10-20"};const rows=[target];const result=validateSchedule({...target,material:"Perubahan"},rows,{excludeId:target.id});assert.equal(result.valid,true);});
