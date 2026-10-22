@@ -31,3 +31,8 @@ Untuk membuka UI, sajikan direktori ini lewat server HTTP lokal. Jangan membuka 
 - Tidak ada koneksi Supabase atau penulisan database produksi.
 - Belum ada autentikasi aplikasi yang siap produksi; jangan gunakan data pribadi siswa.
 - Commit ini tidak melakukan deployment.
+
+
+## Database planning
+
+Draft data contract (not yet applied to any database): [docs/DATA_CONTRACT_V1.md](docs/DATA_CONTRACT_V1.md). Review the open questions before preparing migrations.
