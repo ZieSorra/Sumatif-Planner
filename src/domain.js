@@ -42,6 +42,13 @@ export function validateSchedule(candidate,schedules=DEMO_SCHEDULES,options={}){
  add("semester","Semester valid",[1,2].includes(Number(candidate.semester)),"Semester harus 1 atau 2.");
  add("sumatif-number","Nomor sumatif valid",[1,2,3].includes(Number(candidate.sumatifNumber)),"Nomor sumatif harus 1, 2, atau 3.");
  add("assessment-type","Jenis asesmen valid",validTypes.has(candidate.assessmentType),"Jenis asesmen harus written atau practical.");
+ const dateMatch=typeof candidate.date==="string"?candidate.date.match(/^(\\d{4})-(\\d{2})-(\\d{2})$/):null;
+ const parsedDate=dateMatch?new Date(Date.UTC(Number(dateMatch[1]),Number(dateMatch[2])-1,Number(dateMatch[3]))):null;
+ const dateValid=!!(dateMatch&&parsedDate&&parsedDate.getUTCFullYear()===Number(dateMatch[1])&&parsedDate.getUTCMonth()===Number(dateMatch[2])-1&&parsedDate.getUTCDate()===Number(dateMatch[3]));
+ add("date-valid","Tanggal asesmen valid",dateValid,"Tanggal wajib diisi dengan tanggal kalender yang valid.");
+ const timePattern=/^(?:[01]\\d|2[0-3]):[0-5]\\d$/;
+ const timesValid=typeof candidate.startTime==="string"&&typeof candidate.endTime==="string"&&timePattern.test(candidate.startTime)&&timePattern.test(candidate.endTime);
+ add("time-format","Format waktu valid",timesValid,"Waktu mulai dan selesai wajib diisi dengan format HH:MM yang valid.");
  add("status","Status jadwal valid",validStatuses.has(candidate.status??"scheduled"),"Status jadwal harus scheduled atau cancelled.");
  const locked=calendar.find(day=>day.date===candidate.date&&day.selectable===false);
  add("school-calendar","Kalender pendidikan",!locked,locked? `Tanggal ${candidate.date} ditandai sebagai ${locked.title||"hari nonaktif"}.`:"");
@@ -50,7 +57,7 @@ export function validateSchedule(candidate,schedules=DEMO_SCHEDULES,options={}){
  const totalCount=conflicts.length+(active(candidate)?1:0),practicalCount=conflicts.filter(s=>s.assessmentType===ASSESSMENT_TYPE.PRACTICAL).length+(candidate.assessmentType===ASSESSMENT_TYPE.PRACTICAL&&active(candidate)?1:0);
  add("daily-written-quota","Maksimal dua asesmen tertulis per kelas per hari",writtenCount<=2,`Batas asesmen tertulis terlampaui: ${writtenCount} pada ${candidate.date}.`);
  add("daily-total-quota","Maksimal tiga asesmen jika ada praktik",!(practicalCount>0&&totalCount>3),`Batas total asesmen terlampaui: ${totalCount} pada ${candidate.date}.`);
- add("time-order","Urutan waktu valid",!candidate.startTime||!candidate.endTime||candidate.endTime>candidate.startTime,"Waktu selesai harus setelah waktu mulai.");
+ add("time-order","Urutan waktu valid",timesValid&&candidate.endTime>candidate.startTime,"Waktu selesai harus setelah waktu mulai.");
  const duplicate=schedules.find(s=>active(s)&&s.id!==excludeId&&s.academicYear===candidate.academicYear&&Number(s.semester)===Number(candidate.semester)&&s.classId===candidate.classId&&s.subjectId===candidate.subjectId&&Number(s.sumatifNumber)===Number(candidate.sumatifNumber));
  add("sequence-unique","Nomor sumatif unik untuk mapel dan kelas",!duplicate,duplicate?`Sumatif ${candidate.sumatifNumber} untuk mapel ini sudah dijadwalkan.`:"");
  const timeConflict=conflicts.find(s=>overlaps(candidate.startTime,candidate.endTime,s.startTime,s.endTime));
