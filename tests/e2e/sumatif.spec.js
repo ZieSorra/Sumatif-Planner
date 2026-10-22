@@ -29,7 +29,8 @@ test("report cancellation changes status and remains in history",async({page})=>
  const frame=page.frameLocator("#screenFrame");
  const firstScheduled=frame.locator("#rows tr").filter({has:frame.getByRole("button",{name:"Batalkan"})}).first();
  await expect(firstScheduled).toBeVisible();
+ const scheduleId=await firstScheduled.getAttribute("data-schedule-id");
  page.once("dialog",dialog=>dialog.accept());
  await firstScheduled.getByRole("button",{name:"Batalkan"}).click();
- await expect(firstScheduled.locator("span.status")).toHaveText("cancelled");
+ await expect(frame.locator(`#rows tr[data-schedule-id="${scheduleId}"] span.status`)).toHaveText("cancelled");
 });
