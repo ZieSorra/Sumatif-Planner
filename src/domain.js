@@ -42,11 +42,11 @@ export function validateSchedule(candidate,schedules=DEMO_SCHEDULES,options={}){
  add("semester","Semester valid",[1,2].includes(Number(candidate.semester)),"Semester harus 1 atau 2.");
  add("sumatif-number","Nomor sumatif valid",[1,2,3].includes(Number(candidate.sumatifNumber)),"Nomor sumatif harus 1, 2, atau 3.");
  add("assessment-type","Jenis asesmen valid",validTypes.has(candidate.assessmentType),"Jenis asesmen harus written atau practical.");
- const dateMatch=typeof candidate.date==="string"?candidate.date.match(/^(\\d{4})-(\\d{2})-(\\d{2})$/):null;
+ const dateMatch=typeof candidate.date==="string"?candidate.date.match(/^(\d{4})-(\d{2})-(\d{2})$/):null;
  const parsedDate=dateMatch?new Date(Date.UTC(Number(dateMatch[1]),Number(dateMatch[2])-1,Number(dateMatch[3]))):null;
  const dateValid=!!(dateMatch&&parsedDate&&parsedDate.getUTCFullYear()===Number(dateMatch[1])&&parsedDate.getUTCMonth()===Number(dateMatch[2])-1&&parsedDate.getUTCDate()===Number(dateMatch[3]));
  add("date-valid","Tanggal asesmen valid",dateValid,"Tanggal wajib diisi dengan tanggal kalender yang valid.");
- const timePattern=/^(?:[01]\\d|2[0-3]):[0-5]\\d$/;
+ const timePattern=/^(?:[01]\d|2[0-3]):[0-5]\d$/;
  const timesValid=typeof candidate.startTime==="string"&&typeof candidate.endTime==="string"&&timePattern.test(candidate.startTime)&&timePattern.test(candidate.endTime);
  add("time-format","Format waktu valid",timesValid,"Waktu mulai dan selesai wajib diisi dengan format HH:MM yang valid.");
  add("status","Status jadwal valid",validStatuses.has(candidate.status??"scheduled"),"Status jadwal harus scheduled atau cancelled.");
