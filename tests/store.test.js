@@ -1,0 +1,10 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import {getSchedules,saveSchedule,cancelSchedule,subscribeSchedules,resetDemoStore} from "../src/store.js";
+import {DEMO_SCHEDULES} from "../src/domain.js";
+const valid={academicYear:"2026/2027",semester:1,classId:"class-5a",subjectId:"bahasa-indonesia",subject:"Bahasa Indonesia",teacherId:"teacher-ahmad",teacher:"Ahmad Faisal, S.Pd.",sumatifNumber:2,date:"2026-10-20",startTime:"07:30",endTime:"08:30",assessmentType:"written",room:"Ruang kelas",material:"Membaca",status:"scheduled"};
+test("store returns defensive copies",()=>{resetDemoStore();const rows=getSchedules();rows[0].status="cancelled";assert.equal(getSchedules()[0].status,DEMO_SCHEDULES[0].status);});
+test("store rejects schedule beyond daily written quota",()=>{resetDemoStore();const result=saveSchedule({...valid,date:"2026-10-17"});assert.equal(result.ok,false);});
+test("store saves valid new schedule in session memory",()=>{resetDemoStore();const result=saveSchedule(valid);assert.equal(result.ok,true);assert.ok(getSchedules().some(s=>s.id===result.record.id));});
+test("cancelled schedule is excluded from active schedule data",()=>{resetDemoStore();const id=DEMO_SCHEDULES[0].id;assert.equal(cancelSchedule(id).ok,true);assert.ok(!getSchedules().find(s=>s.id===id).status==="scheduled");});
+test("subscriber receives change event",()=>{resetDemoStore();let seen=false;const unsubscribe=subscribeSchedules(e=>{if(e.action==="created")seen=true;});saveSchedule(valid);unsubscribe();assert.equal(seen,true);resetDemoStore();});
