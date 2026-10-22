@@ -34,3 +34,17 @@ test("report cancellation changes status and remains in history",async({page})=>
  await firstScheduled.getByRole("button",{name:"Batalkan"}).click();
  await expect(frame.locator(`#rows tr[data-schedule-id="${scheduleId}"] span.status`)).toHaveText("cancelled");
 });
+
+test("form limits subjects and teachers to active class assignments",async({page})=>{
+ await page.goto("/");
+ await page.getByRole("button",{name:/Form & Validasi/}).click();
+ const frame=page.frameLocator("#screenFrame");
+ await frame.locator("#class-select").selectOption("class-5b");
+ await expect(frame.locator("#subject-select option")).toHaveCount(1);
+ await expect(frame.locator("#subject-select")).toHaveValue("pjok");
+ await expect(frame.locator("#teacher-select option")).toHaveCount(1);
+ await expect(frame.locator("#teacher-select")).toHaveValue("teacher-rudi");
+ await frame.locator("#class-select").selectOption("class-5a");
+ await expect(frame.locator("#subject-select option")).toHaveCount(3);
+ await expect(frame.locator("#teacher-select")).toHaveValue("teacher-ahmad");
+});
