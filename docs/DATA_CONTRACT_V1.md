@@ -1,6 +1,6 @@
 # Sumatif Planner — Kontrak Data v1 (Draft)
 
-Status: DRAFT v1.1 — keputusan awal sudah dimasukkan; menunggu final approval sebelum migrasi database.
+Status: DRAFT v1.2 — semua keputusan kontrak awal telah diisi berdasarkan persetujuan pemilik proyek; menunggu persetujuan final eksplisit sebelum migrasi database.
 Tujuan: menyepakati entitas, relasi, batasan bisnis, dan akses sebelum integrasi database.
 Sumber kebenaran: kebutuhan dan aturan yang sudah diimplementasikan pada prototipe. Detail yang belum diputuskan ditandai OPEN QUESTION.
 
@@ -149,11 +149,11 @@ Keputusan yang sudah ditetapkan oleh pemilik proyek:
 - Autentikasi menggunakan Supabase Auth.
 
 Hal yang masih perlu ditentukan sebelum kontrak final:
-1. Apakah satu kombinasi kelas + mata pelajaran + semester boleh memiliki lebih dari satu guru aktif?
-2. Apakah nomor sumatif boleh digunakan kembali jika jadwal sebelumnya dibatalkan? Rekomendasi: nomor yang sama boleh dipakai kembali hanya jika record lama berstatus cancelled; riwayat lama tetap dipertahankan.
-3. Konfirmasi cakupan kuota: rancangan saat ini menerapkan batas per kelas per tanggal, sesuai prototipe. Apakah ini keputusan final?
-4. Bagaimana menyimpan riwayat perubahan tingkat/nama kelas lintas tahun ajaran? Rekomendasi: gunakan tabel riwayat atau snapshot label kelas pada jadwal agar laporan tahun sebelumnya tidak berubah.
-5. Apakah jadwal memerlukan persetujuan/publikasi sebelum dapat dilihat guru? Default rancangan: jadwal berstatus scheduled langsung dapat dilihat guru yang ditugaskan.
+1. Penugasan aktif untuk kombinasi kelas + mata pelajaran + semester dibatasi satu guru utama. Jika sekolah membutuhkan beberapa guru, perubahan kontrak harus disetujui sebelum implementasi.
+2. Nomor sumatif boleh digunakan kembali setelah jadwal sebelumnya berstatus cancelled. Record lama tetap disimpan untuk riwayat.
+3. Kuota berlaku per kelas per tanggal: maksimal 2 asesmen tertulis; jika ada asesmen praktik, maksimal 3 asesmen aktif total.
+4. Riwayat kelas dijaga dengan menyimpan snapshot nama/label kelas pada jadwal atau mekanisme riwayat yang setara, agar laporan tahun sebelumnya tidak berubah ketika nama/tingkat rombel diperbarui.
+5. Jadwal berstatus scheduled yang disimpan admin langsung dapat dilihat oleh guru yang ditugaskan; tidak diperlukan langkah publikasi terpisah.
 
 ## 7. Status implementasi
 
