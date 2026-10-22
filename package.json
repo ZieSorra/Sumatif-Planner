@@ -1,0 +1,13 @@
+{
+  "name": "sumatif-planner",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/*.test.js",
+    "check:structure": "node scripts/check-structure.js"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
