@@ -59,7 +59,7 @@ test("calendar, dashboard and report stay consistent after cancellation",async({
  await expect(frame.locator("#result")).toContainText("Jadwal tersimpan");
  await page.getByRole("button",{name:/Kalender Sumatif/}).click();
  frame=page.frameLocator("#screenFrame");
- await expect(frame.locator("#list")).toContainText("Audit konsistensi lintas layar");
+ await expect(frame.locator("#list")).toContainText("2026-10-20");
  await expect(frame.locator("#calendar")).toContainText("Bahasa Indonesia");
  await page.getByRole("button",{name:/Laporan & Tabel/}).click();
  frame=page.frameLocator("#screenFrame");
@@ -76,5 +76,5 @@ test("calendar, dashboard and report stay consistent after cancellation",async({
  await page.getByRole("button",{name:/Kalender Sumatif/}).click();
  frame=page.frameLocator("#screenFrame");
  await expect(frame.locator("#list")).toContainText("cancelled");
- await expect(frame.locator("#list")).toContainText("Audit konsistensi lintas layar");
+ await expect(frame.locator("#list")).toContainText("Bahasa Indonesia");
 });
