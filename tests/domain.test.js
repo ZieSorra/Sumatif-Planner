@@ -1,0 +1,12 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import {DEMO_SCHEDULES,validateSchedule} from "../src/domain.js";
+const valid={id:"new-one",academicYear:"2026/2027",semester:1,classId:"class-5a",subjectId:"bahasa-indonesia",subject:"Bahasa Indonesia",teacherId:"teacher-ahmad",teacher:"Ahmad Faisal, S.Pd.",sumatifNumber:2,date:"2026-10-20",startTime:"07:30",endTime:"08:30",assessmentType:"written",room:"Ruang kelas",material:"Membaca",status:"scheduled"};
+test("valid demo candidate passes quota and assignment checks",()=>assert.equal(validateSchedule(valid,DEMO_SCHEDULES).valid,true));
+test("third written assessment for same class/date is rejected",()=>{const row={...valid,date:"2026-10-17"};const result=validateSchedule(row,DEMO_SCHEDULES);assert.equal(result.valid,false);assert.ok(result.errors.some(e=>e.key==="daily-written-quota"));});
+test("cancelled records do not count against daily quotas",()=>{const rows=DEMO_SCHEDULES.map(r=>({...r,status:"cancelled"}));const result=validateSchedule({...valid,date:"2026-10-17"},rows);assert.equal(result.valid,true);});
+test("locked calendar date is rejected",()=>{const result=validateSchedule({...valid,date:"2026-10-22"},DEMO_SCHEDULES);assert.ok(result.errors.some(e=>e.key==="school-calendar"));});
+test("wrong teaching assignment is rejected",()=>{const result=validateSchedule({...valid,teacherId:"teacher-nurjanah"},DEMO_SCHEDULES);assert.ok(result.errors.some(e=>e.key==="teacher-assignment"));});
+test("end time earlier than start time is rejected",()=>{const result=validateSchedule({...valid,startTime:"10:00",endTime:"09:00"},DEMO_SCHEDULES);assert.ok(result.errors.some(e=>e.key==="time-order"));});
+test("assessment sequence must be unique for class and subject",()=>{const result=validateSchedule({...valid,subjectId:"bahasa-indonesia",sumatifNumber:1},DEMO_SCHEDULES);assert.ok(result.errors.some(e=>e.key==="sequence-unique"));});
+test("edit excludes its own record from duplicate checks",()=>{const target=DEMO_SCHEDULES[0];assert.equal(validateSchedule({...target,material:"updated"},DEMO_SCHEDULES,{excludeId:target.id}).valid,true);});
