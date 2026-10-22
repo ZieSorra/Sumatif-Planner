@@ -63,7 +63,7 @@ test("calendar, dashboard and report stay consistent after cancellation",async({
  await expect(frame.locator("#calendar")).toContainText("Bahasa Indonesia");
  await page.getByRole("button",{name:/Laporan & Tabel/}).click();
  frame=page.frameLocator("#screenFrame");
- const row=frame.locator("#rows tr").filter({hasText:"Audit konsistensi lintas layar"});
+ const row=frame.locator("#rows tr").filter({hasText:"2026-10-20"}).filter({hasText:"Bahasa Indonesia"});
  await expect(row).toBeVisible();
  const id=await row.getAttribute("data-schedule-id");
  page.once("dialog",dialog=>dialog.accept());
