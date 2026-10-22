@@ -38,3 +38,5 @@ Untuk membuka UI, sajikan direktori ini lewat server HTTP lokal. Jangan membuka 
 Draft data contract (not yet applied to any database): [docs/DATA_CONTRACT_V1.md](docs/DATA_CONTRACT_V1.md). Compatibility audit for preserving existing rules: [docs/COMPATIBILITY_AUDIT.md](docs/COMPATIBILITY_AUDIT.md). No database migration or production write is authorized yet. SQL schema draft for review only (not executable/applied): [docs/SQL_SCHEMA_DRAFT_REVIEW_ONLY.sql](docs/SQL_SCHEMA_DRAFT_REVIEW_ONLY.sql).
 
 SQL draft review findings (static review only; no database access): [docs/SQL_SCHEMA_REVIEW.md](docs/SQL_SCHEMA_REVIEW.md).
+
+Supabase schema inventory (SELECT-only; not executed): [docs/SUPABASE_READ_ONLY_INSPECTION.sql](docs/SUPABASE_READ_ONLY_INSPECTION.sql).
