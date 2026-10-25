@@ -4,7 +4,7 @@ Aplikasi perencana asesmen sumatif untuk sekolah dasar (SD), dikembangkan di baw
 
 ## Status proyek
 
-Fondasi Fase 2 masih berupa prototipe frontend dengan store dalam memori sesi. Belum terhubung ke Supabase dan belum menyimpan perubahan secara permanen. Jangan gunakan sebagai aplikasi produksi sebelum integrasi dan pengujian browser selesai.
+Branch integrasi Supabase tersedia sebagai kandidat uji. Jika konfigurasi Supabase belum diisi di `index.html`, aplikasi tetap berjalan dalam mode demo. Koneksi database langsung belum diverifikasi terhadap proyek Supabase sekolah; jangan gunakan data nyata sebelum uji RLS, trigger, dan operasi jadwal selesai.
 
 ## Cakupan saat ini
 
@@ -12,7 +12,9 @@ Fondasi Fase 2 masih berupa prototipe frontend dengan store dalam memori sesi. B
 - Kontrak domain dan data demo untuk tahun pelajaran 2026/2027.
 - Validasi kuota asesmen harian: maksimal 2 asesmen tertulis per kelas per hari; bila ada asesmen praktik, maksimal 3 asesmen aktif total per kelas per hari.
 - Status jadwal tersimpan menggunakan `scheduled` atau `cancelled`.
-- Store sementara lintas layar melalui bridge `postMessage`.
+- Store demo lintas layar melalui bridge `postMessage`.
+- Mode Supabase opsional melalui browser client, login, adapter repository, dan bridge async saat runtime config diisi.
+- Form Supabase mengambil referensi dari tabel yang ada dan mengirim UUID database.
 
 ## Menjalankan secara lokal
 
@@ -27,9 +29,11 @@ Untuk membuka UI, sajikan direktori ini lewat server HTTP lokal. Jangan membuka 
 
 ## Batasan dan keamanan
 
-- Semua data demo dan perubahan jadwal ada di memori; refresh halaman akan menghapus perubahan.
-- Tidak ada koneksi Supabase atau penulisan database produksi.
-- Belum ada autentikasi aplikasi yang siap produksi; jangan gunakan data pribadi siswa.
+- Mode demo: semua data dan perubahan berada di memori; refresh mengembalikan data awal.
+- Mode Supabase: koneksi memerlukan URL proyek dan publishable/anon key pada `supabase-url` dan `supabase-publishable-key` di `index.html`; jangan pernah memasukkan `service_role` key.
+- Login bergantung pada akun Supabase Auth dan baris profil aktif di tabel `profiles`.
+- Operasi database belum diuji terhadap proyek nyata. RLS adalah batas keamanan utama; kebijakan DELETE yang dilaporkan masih mengizinkan guru menghapus baris miliknya dan harus diselaraskan sebelum produksi.
+- Pembatalan menjalankan trigger UPDATE yang ada; uji perilakunya sebelum digunakan.
 - Commit ini tidak melakukan deployment.
 
 
