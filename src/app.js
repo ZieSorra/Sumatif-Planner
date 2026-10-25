@@ -1,4 +1,6 @@
 import { setBridgeScreen } from "./screen-bridge.js";
+import { getSupabaseClient, signInWithPassword, signOut } from "./supabase-client.js";
+import { getSignedInProfile } from "./supabase-repository.js";
 const u=document.querySelector('meta[name="supabase-url"]')?.content?.trim();
 const k=document.querySelector('meta[name="supabase-publishable-key"]')?.content?.trim();
 if(u&&k) window.ZIESORRA_SUPABASE_CONFIG={url:u,publishableKey:k};
