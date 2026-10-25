@@ -47,6 +47,7 @@ function showSignedOut(message){
 }
 function showSignedIn(profile){
  authPanel.hidden=true;frame.hidden=false;document.querySelector(".page-heading").hidden=false;
+ navItems.forEach(item=>item.disabled=false);
  frame.src=frame.getAttribute("src");
  navItems.forEach(item=>item.disabled=false);
  if(accountBar){accountBar.hidden=false;accountBar.style.display="flex";}
