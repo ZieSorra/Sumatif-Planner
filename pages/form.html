@@ -27,7 +27,7 @@
  classes=Object.fromEntries((referenceData.classes||[]).map(x=>[x.id,x.name]));
  subjects=Object.fromEntries((referenceData.subjects||[]).map(x=>[x.id,x.name]));
  assignments=(referenceData.assignments||[]).map(x=>({academicYearId:x.academic_year_id,teacherId:x.teacher_id,classId:x.class_id,subjectId:x.subject_id,active:x.is_active,academicYear:years.find(y=>y.id===x.academic_year_id)?.name}));
- teachers=Object.fromEntries([...new Set(assignments.map(x=>x.teacherId))].map(id=>[id,id===signedInProfile.authUserId?signedInProfile.full_name:id]));
+ teachers=Object.fromEntries((referenceData.teachers||[]).map(t=>[t.id,t.full_name]));
  const yearSelect=$("academic-year-select");yearSelect.addEventListener("change",()=>refreshSubjects());
  setOptions($("class-select"),(referenceData.classes||[]).map(x=>({value:x.id,label:x.name})));
  refreshSubjects((referenceData.subjects||[])[0]?.id);
