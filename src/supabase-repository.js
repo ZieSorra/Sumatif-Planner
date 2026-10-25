@@ -80,6 +80,15 @@ export async function loadPlannerReferenceData() {
   const profile = await getSignedInProfile();
   const client = await getSupabaseClient();
 
+  // Scope teacher assignments in PostgREST itself. Client-side filtering alone
+  // would expose other teachers' assignment metadata if SELECT RLS were broad.
+  let assignmentsQuery = client.from("teacher_assignments")
+    .select("id, academic_year_id, teacher_id, class_id, subject_id, is_active")
+    .eq("is_active", true);
+  if (profile.role !== "admin") {
+    assignmentsQuery = assignmentsQuery.eq("teacher_id", profile.authUserId);
+  }
+
   const [yearsResult, periodsResult, classesResult, subjectsResult, calendarResult, assignmentsResult] =
     await Promise.all([
       client.from("academic_years")
@@ -100,9 +109,7 @@ export async function loadPlannerReferenceData() {
       client.from("education_calendar")
         .select("id, academic_year_id, semester, date, day_type, title, description, is_selectable")
         .order("date"),
-      client.from("teacher_assignments")
-        .select("id, academic_year_id, teacher_id, class_id, subject_id, is_active")
-        .eq("is_active", true)
+      assignmentsQuery
     ]);
 
   const years = unwrap(yearsResult);
@@ -110,11 +117,7 @@ export async function loadPlannerReferenceData() {
   const classes = unwrap(classesResult);
   const subjects = unwrap(subjectsResult);
   const calendar = unwrap(calendarResult);
-  const assignments = unwrap(assignmentsResult);
-
-  const visibleAssignments = profile.role === "admin"
-    ? assignments
-    : assignments.filter(row => row.teacher_id === profile.authUserId);
+  const visibleAssignments = unwrap(assignmentsResult);
 
   const visibleClassIds = new Set(visibleAssignments.map(row => row.class_id));
   const visibleSubjectIds = new Set(visibleAssignments.map(row => row.subject_id));
