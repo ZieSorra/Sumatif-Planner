@@ -1,6 +1,6 @@
 # Supabase integration foundation
 
-This branch adds a browser-side client factory and an initial data adapter for the existing Supabase schema. The app screens still use the in-memory store; this does **not** make the prototype production-ready.
+This branch adds a browser-side client factory and an initial data adapter for the existing Supabase schema. The bridge and core schedule screens now select Supabase mode when runtime configuration is present; this does **not** make the prototype production-ready.
 
 ## Runtime configuration
 
@@ -19,22 +19,21 @@ The client library is loaded from `https://esm.sh/@supabase/supabase-js@2` at ru
 
 ## Verified current boundaries
 
-- Existing screens still use the in-memory demo store; the repository functions are not wired into the bridge or screens yet.
+- `src/screen-bridge.js` dispatches schedule reads/writes to Supabase when runtime config is present; otherwise it retains demo mode.
+- The app shell has a Supabase sign-in gate. The form loads live reference data and submits database UUIDs. Dashboard, calendar, reports, and cancellation read/write through the bridge.
+- Actual project credentials, live RLS behavior, foreign-key joins, and trigger behavior have not been tested in this environment.
 - `src/supabase-repository.js` maps the existing `academic_years`, `assessment_periods`, `classes`, `education_calendar`, `profiles`, `subjects`, `teacher_assignments`, and `sumatif_schedules` columns.
 - No Supabase credentials are committed.
 - No SQL migration or database write is part of this change.
-- This is a foundation for the next integration step, not a release-ready integration.
+- This is an integration candidate for verification, not a release-ready deployment.
 
 ## Before connecting schedule screens
 
-1. Confirm the runtime config is injected by the deployment environment, not hard-coded with secrets.
-2. Implement sign-in/sign-out UI and handle expired sessions.
-3. Fetch the authenticated user's `profiles` row and enforce active profile state.
-4. Wire the login and profile state into the application shell.
-5. Wire the bridge to the async repository and replace demo IDs with actual UUIDs.
-6. Check the actual RLS SELECT grants for each reference table; the adapter relies on RLS for authorization.
-7. Test as an active teacher, an unassigned teacher, an inactive profile, and an admin.
-8. Test database trigger behavior for cancelling schedules before relying on cancellation from the UI.
+1. Fill `supabase-url` and `supabase-publishable-key` in `index.html` for a test deployment, or inject equivalent runtime config before the app module runs. Use only the publishable/anon key, never `service_role`.
+2. Check actual RLS SELECT grants for each reference table and verify the profile query and relationship joins.
+3. Test as an active teacher, an unassigned teacher, an inactive profile, and an admin.
+4. Test create, edit, and cancellation against actual database triggers and constraints.
+5. Resolve the hard-delete RLS policy conflict before production; app-level admin checks do not replace RLS.
 
 ## Authorization notes from function review
 
