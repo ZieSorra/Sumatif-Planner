@@ -1,4 +1,7 @@
 import { setBridgeScreen } from "./screen-bridge.js";
+const u=document.querySelector('meta[name="supabase-url"]')?.content?.trim();
+const k=document.querySelector('meta[name="supabase-publishable-key"]')?.content?.trim();
+if(u&&k) window.ZIESORRA_SUPABASE_CONFIG={url:u,publishableKey:k};
 const routes = {
   dashboard: {title:"Dashboard",description:"Ringkasan perencana asesmen sekolah dasar.",src:"./pages/dashboard.html"},
   calendar: {title:"Sumatif Planner",description:"Kalender dan detail jadwal asesmen.",src:"./pages/calendar.html"},
