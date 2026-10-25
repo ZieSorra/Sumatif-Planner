@@ -1,4 +1,15 @@
 import {test,expect} from "@playwright/test";
+
+// These tests cover the deterministic demo workflow. The repository may contain
+// a real Supabase project URL and publishable key for manual integration tests;
+// blank them before app.js runs so CI never depends on a live Auth/database.
+test.beforeEach(async ({page}) => {
+ await page.addInitScript(() => {
+  document.querySelector('meta[name="supabase-url"]')?.setAttribute("content", "");
+  document.querySelector('meta[name="supabase-publishable-key"]')?.setAttribute("content", "");
+ });
+});
+
 test("app opens and navigation reaches all four screens",async({page})=>{
  await page.goto("/");
  await expect(page.getByRole("heading",{name:"Dashboard"}).first()).toBeVisible();
