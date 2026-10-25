@@ -30,9 +30,12 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           path: .
+          name: sumatif-planner-preview
       - name: Deploy preview
         id: deployment
         uses: actions/deploy-pages@v4
+        with:
+          artifact_name: sumatif-planner-preview
       - name: Smoke test deployed site
         env:
           DEPLOY_URL: ${{ steps.deployment.outputs.page_url }}
