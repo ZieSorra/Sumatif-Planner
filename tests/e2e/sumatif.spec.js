@@ -5,8 +5,14 @@ import {test,expect} from "@playwright/test";
 // blank them before app.js runs so CI never depends on a live Auth/database.
 test.beforeEach(async ({page}) => {
  await page.addInitScript(() => {
-  document.querySelector('meta[name="supabase-url"]')?.setAttribute("content", "");
-  document.querySelector('meta[name="supabase-publishable-key"]')?.setAttribute("content", "");
+  const originalQuerySelector = Document.prototype.querySelector;
+  Document.prototype.querySelector = function(selector) {
+   if (selector === 'meta[name="supabase-url"]' ||
+       selector === 'meta[name="supabase-publishable-key"]') {
+    return { content: "" };
+   }
+   return originalQuerySelector.call(this, selector);
+  };
  });
 });
 
