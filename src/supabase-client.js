@@ -55,6 +55,27 @@ export async function getCurrentUser() {
   return data.user ?? null;
 }
 
+export async function signInWithPassword(email, password) {
+  if (typeof email !== "string" || !email.trim() ||
+      typeof password !== "string" || !password) {
+    throw new Error("Email dan kata sandi wajib diisi.");
+  }
+  const client = await getSupabaseClient();
+  const { data, error } = await client.auth.signInWithPassword({
+    email: email.trim(),
+    password
+  });
+  if (error) throw new Error("Gagal masuk: " + error.message);
+  return data.user ?? null;
+}
+
+export async function signOut() {
+  const client = await getSupabaseClient();
+  const { error } = await client.auth.signOut();
+  if (error) throw new Error("Gagal keluar: " + error.message);
+  return { signedOut: true };
+}
+
 export async function requireCurrentUser() {
   const user = await getCurrentUser();
   if (!user) throw new Error("Silakan masuk terlebih dahulu.");
