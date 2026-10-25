@@ -3,8 +3,8 @@
  *
  * Configure window.ZIESORRA_SUPABASE_CONFIG before importing this module:
  * {
- *   url: "https://jizgwoavrxxpfzkwfbma.supabase.co",
- *   publishableKey: "sb_publishable_9eGSinz7ytpNZ2HblVgAxg_oy_HLONS"
+ *   url: "https://YOUR_PROJECT_REF.supabase.co",
+ *   publishableKey: "YOUR_SUPABASE_PUBLISHABLE_OR_ANON_KEY"
  * }
  *
  * Never put a service_role key here. The browser key is public by design;
