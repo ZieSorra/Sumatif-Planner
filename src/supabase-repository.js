@@ -119,6 +119,12 @@ export async function loadPlannerReferenceData() {
   const calendar = unwrap(calendarResult);
   const visibleAssignments = unwrap(assignmentsResult);
 
+  let teachersQuery = client.from("profiles")
+    .select("id, full_name, role, is_active")
+    .eq("is_active", true);
+  if (profile.role !== "admin") teachersQuery = teachersQuery.eq("id", profile.authUserId);
+  const teachers = unwrap(await teachersQuery);
+
   const visibleClassIds = new Set(visibleAssignments.map(row => row.class_id));
   const visibleSubjectIds = new Set(visibleAssignments.map(row => row.subject_id));
 
@@ -133,7 +139,8 @@ export async function loadPlannerReferenceData() {
       ? subjects
       : subjects.filter(row => visibleSubjectIds.has(row.id)),
     calendar,
-    assignments: visibleAssignments
+    assignments: visibleAssignments,
+    teachers
   };
 }
 
