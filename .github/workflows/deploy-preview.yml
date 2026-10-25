@@ -33,3 +33,13 @@ jobs:
       - name: Deploy preview
         id: deployment
         uses: actions/deploy-pages@v4
+      - name: Smoke test deployed site
+        env:
+          DEPLOY_URL: ${{ steps.deployment.outputs.page_url }}
+        run: |
+          set -eu
+          test -n "$DEPLOY_URL"
+          curl --fail --silent --show-error --location --retry 8 --retry-delay 5 --retry-all-errors "$DEPLOY_URL" -o /tmp/sumatif-planner.html
+          grep -q 'Sumatif Planner | ZIESORRA' /tmp/sumatif-planner.html
+          grep -q './src/app.css' /tmp/sumatif-planner.html
+          echo "Deployment smoke test passed: $DEPLOY_URL"
