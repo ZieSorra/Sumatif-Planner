@@ -1,0 +1,48 @@
+name: Deploy Sumatif Planner preview
+
+on:
+  push:
+    branches:
+      - feat/supabase-integration-foundation
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages-preview
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+      - name: Upload static site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+          name: sumatif-planner-preview
+      - name: Deploy preview
+        id: deployment
+        uses: actions/deploy-pages@v4
+        with:
+          artifact_name: sumatif-planner-preview
+      - name: Smoke test deployed site
+        env:
+          DEPLOY_URL: ${{ steps.deployment.outputs.page_url }}
+        run: |
+          set -eu
+          test -n "$DEPLOY_URL"
+          curl --fail --silent --show-error --location --retry 8 --retry-delay 5 --retry-all-errors "$DEPLOY_URL" -o /tmp/sumatif-planner.html
+          grep -q 'Sumatif Planner | ZIESORRA' /tmp/sumatif-planner.html
+          grep -q './src/app.css' /tmp/sumatif-planner.html
+          echo "Deployment smoke test passed: $DEPLOY_URL"

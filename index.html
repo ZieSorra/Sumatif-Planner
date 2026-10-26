@@ -4,6 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#172554">
+  <meta name="supabase-url" content="https://jizgwoavrxxpfzkwfbma.supabase.co">
+  <meta name="supabase-publishable-key" content="sb_publishable_9eGSinz7ytpNZ2HblVgAxg_oy_HLONS">
   <title>Sumatif Planner | ZIESORRA</title>
   <link rel="stylesheet" href="./src/app.css">
 </head>
@@ -26,7 +28,9 @@
         <div><div class="eyebrow">ZIESORRA · POWERED BY ZIESORRA</div><h1 id="pageTitle">Dashboard</h1></div>
         <div class="topbar-meta"><span class="status-dot"></span><span>TA 2026/2027 · Semester Ganjil</span></div>
       </header>
-      <section class="page-heading"><div><h2 id="screenTitle">Dashboard</h2><p id="screenDescription">Ringkasan perencana asesmen sekolah dasar.</p></div><span class="demo-badge">DEMO · NON-PERSISTEN</span></section>
+      <section id="authPanel" hidden style="margin:16px 0;padding:24px;background:#fff;border:1px solid #dbe4f0;border-radius:16px;max-width:560px"><h2 style="margin-top:0">Masuk ke Sumatif Planner</h2><p style="color:#64748b">Gunakan akun sekolah yang terdaftar di Supabase Auth.</p><form id="loginForm" style="display:grid;gap:12px"><label style="display:grid;gap:6px">Email sekolah<input id="loginEmail" type="email" autocomplete="username" required style="padding:12px;border:1px solid #cbd5e1;border-radius:8px"></label><label style="display:grid;gap:6px">Kata sandi<input id="loginPassword" type="password" autocomplete="current-password" required style="padding:12px;border:1px solid #cbd5e1;border-radius:8px"></label><button type="submit" style="padding:12px;border:0;border-radius:8px;background:#315bd6;color:white;font-weight:700">Masuk</button></form><p id="authMessage" role="status" style="white-space:pre-wrap;color:#475569"></p></section>
+      <section class="page-heading"><div><h2 id="screenTitle">Dashboard</h2><p id="screenDescription">Ringkasan perencana asesmen sekolah dasar.</p></div><span id="modeBadge" class="demo-badge">DEMO · NON-PERSISTEN</span></section>
+      <div id="accountBar" hidden style="align-items:center;justify-content:flex-end;gap:12px;padding:8px 0;color:#475569;font-size:13px"><span id="accountLabel"></span><button id="logoutButton" type="button" style="border:1px solid #cbd5e1;background:#fff;border-radius:8px;padding:7px 10px;cursor:pointer">Keluar</button></div>
       <iframe id="screenFrame" title="Konten Sumatif Planner" src="./pages/dashboard.html"></iframe>
     </main>
   </div>
