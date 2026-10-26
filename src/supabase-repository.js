@@ -71,7 +71,8 @@ export async function getSignedInProfile() {
     throw new Error("Profil pengguna tidak ditemukan atau tidak aktif. Hubungi admin sekolah.");
   }
   if (!["admin", "teacher"].includes(row.role)) {
-    throw new Error("Peran pengguna tidak dikenali.");
+    await client.auth.signOut();
+    throw new Error("Peran pengguna tidak dikenali. Sesi telah diakhiri; hubungi admin sekolah.");
   }
   return { ...row, authUserId: user.id };
 }
